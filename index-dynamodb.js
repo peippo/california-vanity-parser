@@ -64,17 +64,20 @@ const formatLine = (line) => {
 	const lineParts = line.split(",");
 
 	if (
-		!/[0-9]/.test(capitalCase(lineParts[1].toString())) ||
-		lineParts[2] === "NO MICRO AVAILABLE" ||
-		lineParts[2] === "No micro" ||
-		lineParts[2] === ""
+		lineParts[1] === "6" ||
+		!/\b[0-9]\b/.test(capitalCase(lineParts[1].charAt(0).toString())) ||
+		lineParts[2].includes("NO MICRO") ||
+		lineParts[2] === "" ||
+		lineParts[3].includes("AREA CODE") ||
+		lineParts[3].includes("13 GANG") ||
+		lineParts[3].includes("13-GANG")
 	) {
 		skippedLines += 1;
 		return null;
 	}
 
 	const plate = { S: lineParts[0] };
-	const reviewReasonCode = { N: lineParts[1].toString() || "0" };
+	const reviewReasonCode = { N: lineParts[1].charAt(0).toString() || "0" };
 	const customerMeaning = { S: capitalCase(lineParts[2]) || "0" };
 	const reviewerComments = { S: capitalCase(lineParts[3]) || "No comment" };
 	const isApproved = lineParts[4] === "Y" ? { BOOL: true } : { BOOL: false };
