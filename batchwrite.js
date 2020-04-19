@@ -1,5 +1,9 @@
 const AWS = require("aws-sdk");
-const db = new AWS.DynamoDB({ region: "eu-north-1" });
+const db = new AWS.DynamoDB({
+	region: "eu-north-1",
+	maxRetries: 20,
+	retryDelayOptions: { base: 500 },
+});
 
 const data = [
 	/* {"PutRequest":{"Item":{"id":{"N":"0"} ... */
@@ -9,6 +13,7 @@ const batches = [];
 const batchSize = 20;
 let currentBatch = [];
 let itemCount = 0;
+let completedRequests = 0;
 
 for (let i in data) {
 	itemCount++;
@@ -26,6 +31,8 @@ if (currentBatch.length > 0 && currentBatch.length !== batchSize) {
 }
 
 function handler(request) {
+	completedRequests += 1;
+
 	return function (err, data) {
 		if (err) {
 			console.error(JSON.stringify(err, null, 2));
