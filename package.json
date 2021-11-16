@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/peippo/california-vanity-parser#readme",
   "dependencies": {
-    "aws-sdk": "^2.658.0"
+    "aws-sdk": "^2.814.0"
   }
 }
